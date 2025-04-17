@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Course Registration</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f8fb;
+      color: #333;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #004080;
+      color: white;
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    main {
+      max-width: 600px;
+      margin: 40px auto;
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+      color: #004080;
+      text-align: center;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      font-weight: 600;
+    }
+
+    input[type="text"],
+    input[type="email"] {
+      width: 96%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    .course-boxes {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 10px;
+        justify-content: space-between;
+    }
+
+    .course-option {
+        flex: 1 1 45%;
+        min-width: 45%;
+        border: 2px solid #ccc;
+        border-radius: 8px;
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        user-select: none;
+        background-color: #fff;
+        box-sizing: border-box;
+    }
+
+    /* Add responsive media query here */
+    @media (max-width: 600px) {
+        main {
+            margin: 20px;
+            padding: 20px;
+        }
+
+        .course-option {
+            flex: 1 1 100%;
+         min-width: 100%;
+        }
+
+        button {
+            width: 100%;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            font-size: 16px;
+        }
+    }
+
+    .course-option input {
+      display: none;
+    }
+
+    .course-option.selected {
+      background-color: #c8f7c5;
+      border-color: #2e7d32;
+      color: #2e7d32;
+      font-weight: bold;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      background-color: #009688;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    button:hover {
+      background-color: #00796b;
+    }
+
+    #statusMessage {
+      margin-top: 20px;
+      font-weight: bold;
+      color: #004080;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>PANASON LEARNING INSTITUTE</h1>
+  </header>
+
+  <main>
+    <h2>Course Registration</h2>
+
+    <form id="registrationForm">
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" required>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" required>
+
+      <label>Select Courses (Choose up to 3):</label>
+      <div class="course-boxes">
+        <label class="course-option">
+          <input type="checkbox" name="courses" value="Math 101">
+          Math 101
+        </label>
+        <label class="course-option">
+          <input type="checkbox" name="courses" value="Science 102">
+          Science 102
+        </label>
+        <label class="course-option">
+          <input type="checkbox" name="courses" value="English 103">
+          English 103
+        </label>
+        <label class="course-option">
+          <input type="checkbox" name="courses" value="History 104">
+          History 104
+        </label>
+        <label class="course-option">
+          <input type="checkbox" name="courses" value="Art 105">
+          Art 105
+        </label>
+        <label class="course-option">
+          <input type="checkbox" name="courses" value="Computer 106">
+          Computer 106
+        </label>
+      </div>
+
+      <button type="submit">Submit Registration</button>
+    </form>
+
+    <p id="statusMessage"></p>
+  </main>
+
+  <script>
+    const courseOptions = document.querySelectorAll('.course-option');
+    const maxSelections = 3;
+  
+    function updateSelectionState() {
+      const selected = document.querySelectorAll('input[name="courses"]:checked');
+      const selectedCount = selected.length;
+  
+      courseOptions.forEach(option => {
+        const checkbox = option.querySelector('input');
+        if (!checkbox.checked) {
+          checkbox.disabled = selectedCount >= maxSelections;
+          option.style.opacity = selectedCount >= maxSelections ? 0.6 : 1;
+          option.style.cursor = selectedCount >= maxSelections ? 'not-allowed' : 'pointer';
+        }
+      });
+    }
+  
+    courseOptions.forEach(option => {
+      option.addEventListener('click', () => {
+        const checkbox = option.querySelector('input');
+        
+        // Toggle only if not disabled
+        if (!checkbox.disabled || checkbox.checked) {
+          checkbox.checked = !checkbox.checked;
+          option.classList.toggle('selected', checkbox.checked);
+          updateSelectionState();
+        }
+      });
+    });
+  
+    document.getElementById('registrationForm').addEventListener('submit', async function(event) {
+      event.preventDefault();
+  
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+  
+      const selectedCourses = Array.from(document.querySelectorAll('input[name="courses"]:checked')).map(cb => cb.value);
+  
+      if (selectedCourses.length === 0 || selectedCourses.length > maxSelections) {
+        alert(`Please select between 1 and ${maxSelections} courses.`);
+        return;
+      }
+  
+      const data = {
+        name,
+        email,
+        courses: selectedCourses,
+        timestamp: new Date().toISOString()
+      };
+  
+      const apiUrl = "https://qqouw70nme.execute-api.us-east-1.amazonaws.com/SaveStudentRegistration"; // Replace with real URL
+  
+      try {
+        const response = await fetch(apiUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+  
+        const statusMsg = document.getElementById('statusMessage');
+  
+        if (response.ok) {
+          statusMsg.textContent = "Registration successful!";
+          document.getElementById('registrationForm').reset();
+          courseOptions.forEach(option => {
+            option.classList.remove('selected');
+            option.querySelector('input').disabled = false;
+            option.style.opacity = 1;
+            option.style.cursor = 'pointer';
+          });
+        } else {
+          statusMsg.textContent = "Error submitting registration.";
+        }
+      } catch (error) {
+        console.error(error);
+        document.getElementById('statusMessage').textContent = "An unexpected error occurred.";
+      }
+    });
+  </script>
+  
