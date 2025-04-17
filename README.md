@@ -33,13 +33,13 @@ This is a fully serverless course registration system built for PANASON Learning
 
 ## 📁 Project Structure
 
-📁 project-root/ 
-├── index.html 
-├── script.js (inline or extracted) 
-├── lambda/ 
-│ 	└── index.mjs
-├── README.md 
-└── LICENSE
+📁 Panason-Learning-Institute/ 
+	├── index.html  
+	├── lambda/ 
+	│ 	└── index.mjs
+	├── README.md 
+	└── LICENSE
+
 
 
 ## 🚀 How to Deploy
@@ -65,8 +65,6 @@ This is a fully serverless course registration system built for PANASON Learning
 ## ✅ License
 
 This project is licensed under the MIT License – see the [LICENSE](./LICENSE) file for details.
-
----
 
 ### 👨🏽‍💻 Author
 
